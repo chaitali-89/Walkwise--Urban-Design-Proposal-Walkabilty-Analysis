@@ -879,10 +879,31 @@ function hideGeoJSONLayers() {
     });
 }
 
+// Function to show the loader
+function showLoader() {
+    const loaderContainer = document.querySelector('.loader-container');
+    loaderContainer.style.display = 'block'; // Show the loader
+}
+
+// Function to hide the loader and show the content
+function hideLoader() {
+    const loaderContainer = document.querySelector('.loader-container');
+    const content = document.querySelector('.content');
+    
+ //   // Hide the loader
+    loaderContainer.style.display = 'none';
+    
+    // Show the main content
+    content.style.display = 'block';
+}
+
+
 // Event listener for the file input
 document.getElementById('fileInput').addEventListener('change', function() {
     // Turn off visibility of all GeoJSON layers when a file is selected
     hideGeoJSONLayers();
+    // Show loader while page is loading
+    
 });
 
 
@@ -902,7 +923,7 @@ document.getElementById('uploadButton').onclick = function() {
     
 
     // Turn off visibility of all GeoJSON layers
-    hideGeoJSONLayers();
+    //hideGeoJSONLayers();
 
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);
@@ -918,9 +939,13 @@ document.getElementById('uploadButton').onclick = function() {
         }
     })
     .catch(error => console.error('Error uploading file:', error));
+    
 };
 
+
+
 function loadGeoJSON(filename) {
+    //showLoader(); // Show loader while GeoJSON data is loading
     if (geojsonLayerId) {
         // Remove all layers related to the previous GeoJSON data
         const layers = map.getStyle().layers;
@@ -936,6 +961,9 @@ function loadGeoJSON(filename) {
         }
     }
 
+    // Turn off visibility of all GeoJSON layers
+    hideGeoJSONLayers();
+
     console.log('geojsonLayerId:', geojsonLayerId);
 
     fetch(`/geojson/${filename}`)
@@ -946,6 +974,8 @@ function loadGeoJSON(filename) {
                 type: 'geojson',
                 data: data
             });
+
+            
 
             const baseLayerConfig = {
                 'id': 'base-layer',
